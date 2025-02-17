@@ -6,17 +6,15 @@
     <title>{{ page.title }}</title>
 </head>
 <body>
-    <h1>{{ page.title }}</h1>
-    {{ content }}
+{{ content }}
 
-    <h2>Sections</h2>
-    <ul>
-      {% assign pages = site.pages %}
-      {% for section in pages %}
-        {% if section.extname == ".md" and section.path != page.path %}
-          <li><a href="{{ section.url }}">{{ section.title | default: section.path }}</a></li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+<h2>Sections</h2>
+<ul>
+    {% for section in site.html_pages %}
+    {% if section.path != page.path %}
+    <li><a href="{{ section.url }}">{{ section.title | default: section.path }}</a></li>
+    {% endif %}
+    {% endfor %}
+</ul>
 </body>
 </html>

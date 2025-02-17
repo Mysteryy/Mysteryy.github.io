@@ -12,3 +12,11 @@ Welcome to the Software Engineering Interview Prep Guide.
 Here are all the sections you can explore:
 
 - [Home](index.md)
+
+
+<h3>Debug: All Page Paths</h3>
+<ul>
+  {% for section in site.html_pages %}
+    <li>{{ section.path }}</li>
+  {% endfor %}
+</ul>
