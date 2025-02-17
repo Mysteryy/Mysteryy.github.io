@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+</head>
+<body>
+    <h1>{{ page.title }}</h1>
+    {{ content }}
+
+    <h2>Sections</h2>
+    <ul>
+      {% for section in site.pages %}
+        {% if section.path != page.path and section.extname == ".md" %}
+          <li><a href="{{ section.url }}">{{ section.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+</body>
+</html>
