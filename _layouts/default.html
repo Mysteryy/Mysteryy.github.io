@@ -11,9 +11,10 @@
 
     <h2>Sections</h2>
     <ul>
-      {% for section in site.pages %}
-        {% if section.path != page.path and section.extname == ".md" %}
-          <li><a href="{{ section.url }}">{{ section.title }}</a></li>
+      {% assign pages = site.pages | where: "extname", ".md" %}
+      {% for section in pages %}
+        {% if section.path != page.path %}
+          <li><a href="{{ section.url }}">{{ section.title | default: section.path }}</a></li>
         {% endif %}
       {% endfor %}
     </ul>
