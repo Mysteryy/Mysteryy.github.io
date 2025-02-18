@@ -4,50 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
+    <style>
+        body {
+            display: flex;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #sidebar {
+            width: 250px;
+            background: #f4f4f4;
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #ddd;
+        }
+
+        #content {
+            margin-left: 270px;
+            padding: 20px;
+            width: calc(100% - 270px);
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h2>Sections</h2>
 
-<ul>
-    {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
+<div id="sidebar">
+    <h2>Sections</h2>
+    <ul>
+        {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
 
-    {% for group in grouped_sections %}
-        {% assign section_name = group.name | replace: "_", " " | titlecase %}
+        {% for group in grouped_sections %}
+            {% assign section_name = group.name | replace: "_", " " | titlecase %}
+            {% assign has_subfolders = false %}
 
-        {% if group.name == "index.md" %}
-            <!-- Handle the Index page separately -->
-            <li><a href="{{ site.baseurl }}/">{{ section_name | replace: ".md", "" }}</a></li>
-        {% else %}
-            <li><strong>{{ section_name }} /</strong></li>
-            <ul>
-                {% for section in group.items %}
-                    {% assign path_parts = section.path | split: "/" %}
+            <!-- Check if any file has a subdirectory -->
+            {% for section in group.items %}
+                {% assign path_parts = section.path | split: "/" %}
+                {% if path_parts.size > 1 %}
+                    {% assign has_subfolders = true %}
+                {% endif %}
+            {% endfor %}
 
-                    {% if path_parts.size > 1 %}
-                        <li>
-                            {% for part in path_parts offset: 1 %}
-                                {% assign formatted_name = part | replace: "_", " " | titlecase %}
+            <!-- If no subfolders, it's a top-level file -->
+            {% if has_subfolders == false %}
+                <li><a href="{{ group.items[0].url }}">{{ section_name | replace: ".md", "" }}</a></li>
+            {% else %}
+                <li><strong>{{ section_name }} /</strong></li>
+                <ul>
+                    {% for section in group.items %}
+                        {% assign path_parts = section.path | split: "/" %}
 
-                                {% if forloop.last %}
-                                    <a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
-                                {% else %}
-                                    <strong>{{ formatted_name }}/</strong>
-                                {% endif %}
-                            {% endfor %}
-                        </li>
-                    {% else %}
-                        <!-- Directly link top-level pages -->
-                        <li><a href="{{ section.url }}">{{ section_name | replace: ".md", "" }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endfor %}
-</ul>
+                        {% if path_parts.size > 1 %}
+                            <li>
+                                {% for part in path_parts offset: 1 %}
+                                    {% assign formatted_name = part | replace: "_", " " | titlecase %}
 
+                                    {% if forloop.last %}
+                                        <a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
+                                    {% else %}
+                                        <strong>{{ formatted_name }}/</strong>
+                                    {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
 
-
-{{ content }}
+<div id="content">
+    {{ content }}
+</div>
 
 </body>
 </html>
