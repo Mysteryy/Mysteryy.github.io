@@ -84,9 +84,10 @@
                                 {% assign formatted_name = part | replace: "_", " " | titlecase %}
 
                                 {% capture indentation %}
-                                  {% for i in (1..forloop.index) %}
-                                    <br>&nbsp;&nbsp;  <!-- Adds two spaces for each level -->
-                                  {% endfor %}
+                                    <br>
+                                    {% for i in (1..forloop.index) %}
+                                        &nbsp;&nbsp;  <!-- Adds two spaces for each level -->
+                                    {% endfor %}
                                 {% endcapture %}
 
                                 {% if forloop.last %}
