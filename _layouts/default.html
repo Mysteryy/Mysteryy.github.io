@@ -76,24 +76,26 @@
             {% if has_subfolders == false %}
                 <li><a href="{{ group.items[0].url }}">{{ section_name | replace: ".md", "" }}</a></li>
             {% else %}
-                <li><strong>{{ section_name }} /</strong></li>
                 <ul>
                     {% for section in group.items %}
                         {% assign path_parts = section.path | split: "/" %}
+                        <li>
+                            {% for part in path_parts %}
+                                {% assign formatted_name = part | replace: "_", " " | titlecase %}
 
-                        {% if path_parts.size > 1 %}
-                            <li>
-                                {% for part in path_parts offset: 1 %}
-                                    {% assign formatted_name = part | replace: "_", " " | titlecase %}
+                                {% capture indentation %}
+                                  {% for i in (1..forloop.index) %}
+                                    &nbsp;&nbsp;  <!-- Adds two spaces for each level -->
+                                  {% endfor %}
+                                {% endcapture %}
 
-                                    {% if forloop.last %}
-                                        <a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
-                                    {% else %}
-                                        <strong>{{ formatted_name }}/</strong>
-                                    {% endif %}
-                                {% endfor %}
-                            </li>
-                        {% endif %}
+                                {% if forloop.last %}
+                                    <a href="{{ section.url }}">{{ indentation }}{{ formatted_name | replace: ".md", "" }}</a>
+                                {% else %}
+                                    <strong>{{ formatted_name }}/</strong>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
                     {% endfor %}
                 </ul>
             {% endif %}
