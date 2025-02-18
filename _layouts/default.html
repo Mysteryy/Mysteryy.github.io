@@ -24,9 +24,9 @@
         }
 
         #content {
-            margin-left: 270px;
-            padding: 20px;
-            width: calc(100% - 290px);
+            margin-left: 290px;
+            padding: 40px;
+            width: calc(100% - 270px);
         }
 
         h2 {
@@ -45,7 +45,7 @@
 
         a {
             text-decoration: none;
-            color: #333;
+            color: #3080ff;
         }
 
         a:hover {
@@ -57,6 +57,7 @@
 
 <div id="sidebar">
     <h2>Sections</h2>
+    <hr>
     <ul>
         {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
 
@@ -81,7 +82,7 @@
                         {% assign path_parts = section.path | split: "/" %}
                         <li>
                             {% for part in path_parts %}
-                                {% assign formatted_name = part | replace: "_", " " | titlecase %}
+                                {% assign formatted_name = part | replace: "_", " " %}
 
                                 {% capture indentation %}
                                     <br>
@@ -92,6 +93,7 @@
 
                                 {% if forloop.last %}
                                     {{ indentation }}<a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
+                                    <hr>
                                 {% else %}
                                     {{ indentation }}<strong>{{ formatted_name }}/</strong>
                                 {% endif %}
