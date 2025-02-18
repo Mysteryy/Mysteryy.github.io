@@ -85,17 +85,19 @@
                                 {% assign formatted_name = part | replace: "_", " " %}
 
                                 {% capture indentation %}
-                                    <br>
-                                    {% for i in (1..forloop.index) %}
+                                    {% if forloop.index > 1 %}
+                                        <br>
+                                    {% endif %}
+                                    {% for i in (0..forloop.index - 1) %}
                                         &nbsp;&nbsp;  <!-- Adds two spaces for each level -->
                                     {% endfor %}
                                 {% endcapture %}
 
                                 {% if forloop.last %}
-                                    {{ indentation }}<a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
+                                    {{ indentation }}<a href="{{ section.url }}">📃 {{ formatted_name | replace: ".md", "" }}</a>
                                     <hr>
                                 {% else %}
-                                    {{ indentation }}<strong>{{ formatted_name }}/</strong>
+                                    {{ indentation }}<strong>{{ formatted_name }}</strong>
                                 {% endif %}
                             {% endfor %}
                         </li>
