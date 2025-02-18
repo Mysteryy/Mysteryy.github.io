@@ -12,21 +12,36 @@
     {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
 
     {% for group in grouped_sections %}
-        <li><strong>{{ group.name | capitalize }} /</strong></li>
-        <ul>
-            {% for section in group.items %}
-                {% assign path_parts = section.path | split: "/" %}
-                <li>
-                    {% for part in path_parts offset: 1 %}
-                        {% if forloop.last %}
-                            <a href="{{ section.url }}">{{ part | replace: ".md", "" | capitalize }}</a>
-                        {% else %}
-                            <strong>{{ part | capitalize }} /</strong>
-                        {% endif %}
-                    {% endfor %}
-                </li>
-            {% endfor %}
-        </ul>
+        {% assign section_name = group.name | replace: "_", " " | titlecase %}
+
+        {% if group.name == "index.md" %}
+            <!-- Handle the Index page separately -->
+            <li><a href="{{ site.baseurl }}/">{{ section_name | replace: ".md", "" }}</a></li>
+        {% else %}
+            <li><strong>{{ section_name }} /</strong></li>
+            <ul>
+                {% for section in group.items %}
+                    {% assign path_parts = section.path | split: "/" %}
+
+                    {% if path_parts.size > 1 %}
+                        <li>
+                            {% for part in path_parts offset: 1 %}
+                                {% assign formatted_name = part | replace: "_", " " | titlecase %}
+
+                                {% if forloop.last %}
+                                    <a href="{{ section.url }}">{{ formatted_name | replace: ".md", "" }}</a>
+                                {% else %}
+                                    <strong>{{ formatted_name }}/</strong>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                    {% else %}
+                        <!-- Directly link top-level pages -->
+                        <li><a href="{{ section.url }}">{{ section_name | replace: ".md", "" }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endfor %}
 </ul>
 
