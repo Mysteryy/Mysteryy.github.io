@@ -9,18 +9,27 @@
 <h2>Sections</h2>
 
 <ul>
-  {% for section in site.html_pages %}
-    {% if section.path != page.path %}
-      {% assign path_parts = section.path | split: "/" %}
-      <li>
-        {% if path_parts.size > 1 %}
-          {{ path_parts[0] | capitalize }} /
-        {% endif %}
-        <a href="{{ section.url }}">{{ section.title | default: (path_parts | last) }}</a>
-      </li>
-    {% endif %}
-  {% endfor %}
+    {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
+
+    {% for group in grouped_sections %}
+        <li><strong>{{ group.name | capitalize }} /</strong></li>
+        <ul>
+            {% for section in group.items %}
+                {% assign path_parts = section.path | split: "/" %}
+                <li>
+                    {% for part in path_parts offset: 1 %}
+                        {% if forloop.last %}
+                            <a href="{{ section.url }}">{{ part | replace: ".md", "" | capitalize }}</a>
+                        {% else %}
+                            <strong>{{ part | capitalize }} /</strong>
+                        {% endif %}
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
 </ul>
+
 
 
 {{ content }}
