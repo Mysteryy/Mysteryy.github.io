@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
+
     <style>
         body {
             display: flex;
@@ -23,10 +24,19 @@
             border-right: 1px solid #ddd;
         }
 
+        #sidebar-title {
+            text-align: center;
+        }
+
         #content {
             margin-left: 290px;
-            padding: 40px;
-            width: calc(100% - 270px);
+            padding: 20px;
+            width: calc(100% - 290px);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         h2 {
@@ -34,7 +44,7 @@
             margin-bottom: 10px;
         }
 
-        ul {
+        .sidebar-ul {
             list-style-type: none;
             padding: 0;
         }
@@ -56,13 +66,15 @@
 <body>
 
 <div id="sidebar">
-    <h2>Sections</h2>
+    <div id="sidebar-title">
+        <h1>Sections</h1>
+    </div>
     <hr>
-    <ul>
-        {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" %}
+    <ul class="sidebar-ul">
+        {% assign grouped_sections = site.html_pages | group_by_exp: "section", "section.path | split: '/' | first" | sort: "name" %}
 
         {% for group in grouped_sections %}
-            {% assign section_name = group.name | replace: "_", " " | titlecase %}
+            {% assign section_name = group.name | replace: "_", " " %}
             {% assign has_subfolders = false %}
 
             <!-- Check if any file has a subdirectory -->
@@ -75,41 +87,45 @@
 
             <!-- If no subfolders, it's a top-level file -->
             {% if has_subfolders == false %}
-                <li><a href="{{ group.items[0].url }}">{{ section_name | replace: ".md", "" }}</a></li>
+                <li><a href="{{ group.items[0].url }}">📃 {{ section_name | replace: ".md", "" }}</a></li>
             {% else %}
-                <ul>
-                    {% for section in group.items %}
-                        {% assign path_parts = section.path | split: "/" %}
-                        <li>
-                            {% for part in path_parts %}
-                                {% assign formatted_name = part | replace: "_", " " %}
+                <li>
+                    <strong>{{ section_name | replace: ".md", "" }}</strong>
+                    <ul class="sidebar-ul">
+                        {% for section in group.items %}
+                            {% assign path_parts = section.path | split: "/" %}
+                            <li>
+                                {% for part in path_parts offset:1 %}
+                                    {% assign formatted_name = part | replace: "_" , " " | strip %}
 
-                                {% capture indentation %}
-                                    {% if forloop.index > 1 %}
-                                        <br>
+                                    {% capture indentation %}
+                                        {% if forloop.index > 1 %}
+                                            <br>
+                                        {% endif %}
+                                        {% for i in (1..forloop.index) %}
+                                             &nbsp;&nbsp;<!-- Add a dash to indicate nested level -->
+                                        {% endfor %}
+                                    {% endcapture %}
+
+                                    {% if forloop.last %}
+                                        {{ indentation }}<a href="{{ section.url }}">📃 {{ formatted_name | replace: ".md", "" }}</a>
+                                    {% else %}
+                                        {{ indentation }}<strong>{{ formatted_name }}</strong>
                                     {% endif %}
-                                    {% for i in (0..forloop.index - 1) %}
-                                        &nbsp;&nbsp;  <!-- Adds two spaces for each level -->
-                                    {% endfor %}
-                                {% endcapture %}
-
-                                {% if forloop.last %}
-                                    {{ indentation }}<a href="{{ section.url }}">📃 {{ formatted_name | replace: ".md", "" }}</a>
-                                    <hr>
-                                {% else %}
-                                    {{ indentation }}<strong>{{ formatted_name }}</strong>
-                                {% endif %}
-                            {% endfor %}
-                        </li>
-                    {% endfor %}
-                </ul>
+                                {% endfor %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                        <hr>
+                </li>
             {% endif %}
+
         {% endfor %}
     </ul>
 </div>
 
 <div id="content">
-    {{ content }}
+    {{ content | markdownify }}
 </div>
 
 </body>
