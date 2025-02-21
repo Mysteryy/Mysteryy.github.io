@@ -15,18 +15,23 @@ related to the question, keeping it as concise and relevant as possible. In thes
 to gauge your interviewers based on questions they ask, their expressions, and tone, and use
 that as a guide to judge how in depth to go.
 
-## "Tell me About a Time" Questions
+Focus on "I" and not "We". 
+For example:
+
+"We developed a backend using..."   ->   "I developed service A for a backend using..."
+
+## "Tell me About a Time" & "Examples" Questions
 - Tell me about a time that you went above and beyond
 - Tell me about a time that you had to get buy in from people on a project
 - Tell me about a time that you had to solve a problem, and what did you do to resolve the issue?
-
-## "Tell me About" Questions
 - Tell me about some examples of ETL related work you have done
 - Tell me about some examples of AI related work you have done
 - Tell me about a mobile application you have developed
 - Tell me about a back-end you have developed
 - Tell me about a front-end you have developed
 - Tell me about your experience working with CI/CD 
+- Tell me how you use AI to help in development
+- Tell me about an AI integration project you have worked on
 
 ## "What" Questions
 - What is a headless CMS?
@@ -38,6 +43,7 @@ that as a guide to judge how in depth to go.
 - What are your careers goals?
 - What are you looking for in a team?
 - What are you looking for in your next role?
+- What is the benefit of MVC?
 
 ## "How" Questions
 - How do you handle tech debt?
